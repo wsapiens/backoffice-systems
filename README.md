@@ -25,3 +25,11 @@ mysql> show databases;
 mysql> use zappos;
 Database changed
 ```
+
+## Install Lombok on eclipse
+After run maven build, lombok will be downloaded to local maven repo
+Run the lombok jar and updated eclipse
+
+```
+$ java -jar ~/.m2/repository/org/projectlombok/lombok/1.18.4
+```
