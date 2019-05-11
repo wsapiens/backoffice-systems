@@ -7,4 +7,5 @@ import com.zappos.backoffice.database.model.Brand;
 
 @Repository
 public interface BrandRepository extends JpaRepository<Brand, Long> {
+    public Brand findByName(String name);
 }

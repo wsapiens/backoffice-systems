@@ -1,16 +1,19 @@
 package com.zappos.backoffice.tsv.parser;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
 
 import com.zappos.backoffice.error.BackOfficeException;
 import com.zappos.backoffice.tsv.domain.TsvInventory;
 
+@Component
 public class TsvInventoryParser implements TsvParser<TsvInventory> {
     static Logger log = Logger.getLogger(TsvInventoryParser.class);
 
@@ -48,7 +51,7 @@ public class TsvInventoryParser implements TsvParser<TsvInventory> {
                     list.add(inventory);
                 }
             }
-        } catch(Exception e) {
+        } catch(NumberFormatException | IOException e) {
             log.error(e.getMessage());
             throw new BackOfficeException(e);
         }

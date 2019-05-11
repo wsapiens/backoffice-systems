@@ -2,11 +2,13 @@ package com.zappos.backoffice.database.model;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -17,21 +19,33 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name ="INVENTORY")
-@IdClass(InventoryId.class)
 @NoArgsConstructor
 public class Inventory {
 
     @Id
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="BRAND_ID", nullable=false)
+    @Column(name = "ID")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name="BRAND_ID")
+    private Long brandId;
+
+    @ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+    @JoinColumn(name="BRAND_ID", referencedColumnName="ID", insertable=false, updatable=false)
     private Brand brand;
 
     @Column(name = "QUANTITY", nullable=false)
     private Integer quantity;
 
-    @Id
     @Column(name = "TIME_RECEIVED", nullable=false)
     private Date receivedTime;
+
+    public void setBrand(Brand brand) {
+        this.brand = brand;
+        if(null != brand) {
+            this.brandId = brand.getId();
+        }
+    }
 
     public Date getReceivedTime() {
         return receivedTime == null ? receivedTime : (Date)receivedTime.clone();

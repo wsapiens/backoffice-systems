@@ -1,6 +1,7 @@
 package com.zappos.backoffice.tsv.parser;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ public class TsvBrandParser implements TsvParser<TsvBrand> {
                     list.add(brand);
                 }
             }
-        } catch(Exception e) {
+        } catch(NumberFormatException | IOException e) {
             log.error(e.getMessage());
             throw new BackOfficeException(e);
         }
