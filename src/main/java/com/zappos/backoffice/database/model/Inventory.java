@@ -26,11 +26,11 @@ public class Inventory {
     @JoinColumn(name="BRAND_ID", nullable=false)
     private Brand brand;
 
-    @Column(name = "QUANTITY")
+    @Column(name = "QUANTITY", nullable=false)
     private Integer quantity;
 
     @Id
-    @Column(name = "TIME_RECEIVED")
+    @Column(name = "TIME_RECEIVED", nullable=false)
     private Date receivedTime;
 
     public Date getReceivedTime() {
