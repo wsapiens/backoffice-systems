@@ -33,6 +33,7 @@ public class ServiceTestConfig {
         BrandRepository repository = mock(BrandRepository.class);
         when(repository.findAll()).thenReturn(list);
         when(repository.findById(any())).thenReturn(opt);
+        when(repository.getOne(any())).thenReturn(new Brand(1L, "name"));
         when(repository.findByName(any())).thenReturn(new Brand(1L, "name"));
         return repository;
     }

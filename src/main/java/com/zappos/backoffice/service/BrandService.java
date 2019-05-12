@@ -16,6 +16,7 @@ import com.zappos.backoffice.database.model.Brand;
 import com.zappos.backoffice.database.model.Inventory;
 import com.zappos.backoffice.database.repository.BrandRepository;
 import com.zappos.backoffice.database.repository.InventoryRepository;
+import com.zappos.backoffice.error.BackOfficeException;
 import com.zappos.backoffice.mapper.BrandToTsvBrandMapper;
 import com.zappos.backoffice.mapper.TsvBrandToBrandMapper;
 import com.zappos.backoffice.tsv.domain.TsvBrand;
@@ -130,9 +131,6 @@ public class BrandService {
             brand = brandRepository.findByName(name);
         }
         if(null != brand) {
-            List<Inventory> inventories = inventoryRepository.findByBrandId(brand.getId());
-            // delete inventories first
-            inventoryRepository.deleteAll(inventories);
             brandRepository.delete(brand);
         }
     }
@@ -142,18 +140,18 @@ public class BrandService {
      * @param tsvBrands list of TsvBrand objects to delete
      */
     public void delete(List<TsvBrand> tsvBrands) {
-        List<Brand> brands = new ArrayList<>();
-        List<Inventory> inventories = new ArrayList<>();
-        tsvBrands.forEach(t -> {
-            Optional<Brand> opt = brandRepository.findById(Long.valueOf(Integer.toString(t.getId())));
-            opt.ifPresent(brand -> {
-                log.info("delete brand id: ".concat(brand.getId().toString()));
-                brands.add(brand);
-                inventories.addAll(inventoryRepository.findByBrandId(brand.getId()));
-            });
-        });
-        // delete inventories first
-        inventoryRepository.deleteAll(inventories);
-        brandRepository.deleteAll(brands);
+        for(TsvBrand t: tsvBrands) {
+            try {
+                Long brandId = Long.valueOf(Integer.toString(t.getId()));
+                Brand brand = brandRepository.getOne(brandId);
+                log.debug(brand.getId().toString());
+                List<Inventory> invs = inventoryRepository.findByBrandId(brandId);
+                inventoryRepository.deleteAll(invs);
+                brandRepository.delete(brand);
+            } catch(Exception e) {
+                log.error(e.getMessage());
+                throw new BackOfficeException(e);
+            }
+        }
     }
 }

@@ -2,7 +2,6 @@ package com.zappos.backoffice.database.model;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,7 +29,7 @@ public class Inventory {
     @Column(name="BRAND_ID")
     private Long brandId;
 
-    @ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="BRAND_ID", referencedColumnName="ID", insertable=false, updatable=false)
     private Brand brand;
 
