@@ -13,13 +13,9 @@ public class TsvInventoryToInventoryMapper implements DomainMapper<TsvInventory,
     @Override
     public Inventory map(TsvInventory source) {
         Inventory inventory = new Inventory();
-        try {
-            inventory.setBrandId(Long.valueOf(Integer.toString(source.getBrandId())));
-            inventory.setQuantity(source.getQuantity());
-            inventory.setReceivedTime(parseIsoUtcString(source.getReceivedTime()));
-        } catch(ParseException e) {
-            throw new BackOfficeException(e);
-        }
+        inventory.setBrandId(Long.valueOf(Integer.toString(source.getBrandId())));
+        inventory.setQuantity(source.getQuantity());
+        inventory.setReceivedTime(parseIsoUtcString(source.getReceivedTime()));
         return inventory;
     }
 

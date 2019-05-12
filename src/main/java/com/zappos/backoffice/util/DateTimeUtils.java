@@ -37,11 +37,10 @@ public class DateTimeUtils {
 
     /**
      * Parse ISO UTC string to Date object
-     * @param isoString
-     * @return java.util.Date
-     * @throws ParseException 
+     * @param isoString string type data contains iso data time
+     * @return java.util.Date local date
      */
-    public static Date parseIsoUtcString(String isoString) throws ParseException {
+    public static Date parseIsoUtcString(String isoString) {
         LocalDateTime localDateTime = LocalDateTime.parse(isoString, isoDateTimeformatter);
         return Date.from(localDateTime.atZone(ZoneOffset.UTC).toInstant());
     }
