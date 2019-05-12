@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,9 +29,10 @@ public class ServiceTestConfig {
     public BrandRepository brandRepository() {
         List<Brand> list = new ArrayList<>();
         list.add(new Brand(1L, "name"));
+        Optional<Brand> opt = Optional.of(new Brand(1L, "name"));
         BrandRepository repository = mock(BrandRepository.class);
         when(repository.findAll()).thenReturn(list);
-        when(repository.getOne(any())).thenReturn(new Brand(1L, "name"));
+        when(repository.findById(any())).thenReturn(opt);
         when(repository.findByName(any())).thenReturn(new Brand(1L, "name"));
         return repository;
     }

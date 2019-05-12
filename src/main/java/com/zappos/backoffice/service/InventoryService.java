@@ -2,6 +2,7 @@ package com.zappos.backoffice.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +29,13 @@ public class InventoryService {
             list.addAll(inventoryRepository.findByBrandId(brandId)
                                             .stream()
                                             .map(s -> mapper.map(s))
+                                            .filter(Objects::nonNull)
                                             .collect(Collectors.toList()));
         } else {
             list.addAll(inventoryRepository.findAll()
                                             .stream()
                                             .map(s -> mapper.map(s))
+                                            .filter(Objects::nonNull)
                                             .collect(Collectors.toList()));
         }
         return list;

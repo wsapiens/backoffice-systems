@@ -14,6 +14,9 @@ public class InventoryToTsvInventoryMapper implements DomainMapper<Inventory, Ts
 
     @Override
     public TsvInventory map(Inventory source) {
+        if(null == source || null == source.getBrandId()) {
+            return null;
+        }
         return new TsvInventory(source.getBrandId().intValue(), source.getQuantity(), formatIsoUtcDateTime(source.getReceivedTime()));
     }
 

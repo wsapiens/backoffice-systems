@@ -14,6 +14,9 @@ public class BrandToTsvBrandMapper implements DomainMapper<Brand, TsvBrand> {
 
     @Override
     public TsvBrand map(Brand source) {
+        if(null == source || null == source.getId()) {
+            return null;
+        }
         // better now pass the entity id. if we need, then better string type uuid style id
         return new TsvBrand(source.getId().intValue(), source.getName());
     }

@@ -43,7 +43,7 @@ public class TsvBrandParser implements TsvParser<TsvBrand> {
                 } else {
                     TsvBrand brand = new TsvBrand();
                     brand.setId(Integer.parseInt(columns[idIndex]));
-                    brand.setName(columns[nameIndex]);
+                    brand.setName(StringUtils.strip(columns[nameIndex], "\""));
                     list.add(brand);
                 }
             }

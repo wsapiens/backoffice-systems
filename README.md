@@ -148,6 +148,7 @@ if want to change column order, then the label order in header also should be ch
 "Vans"	7
 ```
 
+
 Once have success message return from this application, you can check the result from database too.
 
 ```
@@ -168,19 +169,19 @@ mysql> show databases;
 mysql> use zappos;
 Database changed
 
-mysql> select * from brand;
-+----+--------------+
-| ID | NAME         |
-+----+--------------+
-|  2 | "Asics"      |
-|  5 | "Levi's"     |
-|  3 | "Lucky"      |
-|  1 | "Nike"       |
-|  6 | "Rockport"   |
-|  4 | "Timberland" |
-|  7 | "Vans"       |
-+----+--------------+
-7 rows in set (0.00 sec)
+mysql> select * from brand order by id;
++----+------------+
+| ID | NAME       |
++----+------------+
+|  1 | Nike       |
+|  2 | Asics      |
+|  3 | Lucky      |
+|  4 | Timberland |
+|  5 | Levi's     |
+|  6 | Rockport   |
+|  7 | Vans       |
++----+------------+
+7 rows in set (0.09 sec)
 ```
 
 
@@ -291,4 +292,35 @@ drwxr-xr-x   4 spark  staff   128 May 11 21:59 .
 drwxr-xr-x  15 spark  staff   480 May 11 21:58 ..
 -rw-r--r--   1 spark  staff  1789 May 11 21:59 Brand_Quantity_Time_Received.tsv
 -rw-r--r--   1 spark  staff    94 May 11 21:59 Brands.tsv
+```
+
+
+## Web Service Endpoints Test
+
+I see the BRAND_ID in .tsv file as good candidate of the primary key for BRAND table.
+And Brand Name better be unique, so I put unique constraint on name column in BRAND table.
+So when change entry in BRAND table, change name to different unique name. 
+changing ID will cause other entry has the ID to be changed or new entry will be added with the ID
+
+* Read Brand
+
+If no id or name query param, it will read all brands
+If id or name query param is given, it will return the list contains only the brand it found.
+If no brand is found, it will return empty list
+
+```
+$ curl http://localhost:8080/service/v1/brands
+{"brands":[{"id":2,"name":"Asics"},{"id":5,"name":"Levi's"},{"id":3,"name":"Lucky"},{"id":1,"name":"Nike"},{"id":6,"name":"Rockport"},{"id":4,"name":"Timberland"},{"id":7,"name":"Vans"}]}
+
+$ curl http://localhost:8080/service/v1/brands?id=2
+{"brands":[{"id":2,"name":"Asics"}]}
+
+$ curl http://localhost:8080/service/v1/brands?id=20
+{"brands":[]}
+
+$ curl http://localhost:8080/service/v1/brands?name=Lucky
+{"brands":[{"id":3,"name":"Lucky"}]}
+
+$ curl http://localhost:8080/service/v1/brands?name=Bart
+{"brands":[]}
 ```

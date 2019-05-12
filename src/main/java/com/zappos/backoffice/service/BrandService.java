@@ -2,6 +2,8 @@ package com.zappos.backoffice.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -43,7 +45,7 @@ public class BrandService {
         List<TsvBrand> list = new ArrayList<>();
         BrandToTsvBrandMapper mapper = new BrandToTsvBrandMapper();
         if(null != id) {
-            list.add(mapper.map(brandRepository.getOne(id)));
+            list.add(mapper.map(brandRepository.findById(id).orElse(null)));
         } else if (null != name) {
             list.add(mapper.map(brandRepository.findByName(name)));
         } else {
@@ -51,15 +53,20 @@ public class BrandService {
                 list.addAll(brandRepository.findAll(pageable)
                                             .stream()
                                             .map(s -> mapper.map(s))
+                                            .filter(Objects::nonNull)
                                             .collect(Collectors.toList()));
             } else {
                 list.addAll(brandRepository.findAll()
                                             .stream()
                                             .map(s -> mapper.map(s))
+                                            .filter(Objects::nonNull)
                                             .collect(Collectors.toList()));
             }
         }
-        return list;
+        return list.stream()
+                    .filter(Objects::nonNull)
+                    .distinct()
+                    .collect(Collectors.toList());
     }
 
     /**
@@ -114,9 +121,11 @@ public class BrandService {
         List<Brand> brands = new ArrayList<>();
         List<Inventory> inventories = new ArrayList<>();
         tsvBrands.forEach(t -> {
-            Brand brand = brandRepository.getOne(Long.valueOf(Integer.toString(t.getId())));
-            brands.add(brand);
-            inventories.addAll(inventoryRepository.findByBrandId(brand.getId()));
+            Optional<Brand> opt = brandRepository.findById(Long.valueOf(Integer.toString(t.getId())));
+            opt.ifPresent(brand -> {
+                brands.add(brand);
+                inventories.addAll(inventoryRepository.findByBrandId(brand.getId()));
+            });
         });
         // delete inventories first
         inventoryRepository.deleteAll(inventories);
