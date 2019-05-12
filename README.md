@@ -548,5 +548,6 @@ The most left column has checkBox to select row. You can select multiple rows an
 It will delete all the selected brands and refresh table. If click checkBox on header, you can select all or clear the selection
 
 
+* For last, I used Checkstyle with Google Checks as default and don't have any violation on this project
 5/12/2019 Steve
 
