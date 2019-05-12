@@ -60,4 +60,9 @@ public class ControllerTestConfig {
     public FileUploadController fileUploadController() {
         return new FileUploadController();
     }
+
+    @Bean
+    public WebServiceController webServiceController() {
+        return new WebServiceController();
+    }
 }

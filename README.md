@@ -325,6 +325,42 @@ $ curl http://localhost:8080/service/v1/brands?name=Bart
 {"brands":[]}
 ```
 
+It supports XML format for the response
+
+```
+$ curl -H "Accept: application/xml" http://localhost:8080/service/v1/brands
+<?xml version="1.0" encoding="UTF-8"?>
+<BrandStatus>
+   <brands>
+      <id>2</id>
+      <name>Asics</name>
+   </brands>
+   <brands>
+      <id>5</id>
+      <name>Levi's</name>
+   </brands>
+   <brands>
+      <id>3</id>
+      <name>Lucky</name>
+   </brands>
+   <brands>
+      <id>1</id>
+      <name>Nike</name>
+   </brands>
+   <brands>
+      <id>6</id>
+      <name>Rockport</name>
+   </brands>
+   <brands>
+      <id>4</id>
+      <name>Timberland</name>
+   </brands>
+   <brands>
+      <id>7</id>
+      <name>Vans</name>
+   </brands>
+</BrandStatus>
+```
 
 * Create Brands and Read
 

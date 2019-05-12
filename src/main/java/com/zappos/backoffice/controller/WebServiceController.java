@@ -34,7 +34,7 @@ public class WebServiceController {
 
     @GetMapping(path = "/brands",
                 produces = { MediaType.APPLICATION_JSON_VALUE,
-                             MediaType.APPLICATION_PROBLEM_XML_VALUE })
+                             MediaType.APPLICATION_XML_VALUE })
     public BrandStatus readBrands(@RequestParam(required = false) Long id,
                                   @RequestParam(required = false) String name) {
         log.info("read brands");
@@ -47,7 +47,7 @@ public class WebServiceController {
                 consumes = { MediaType.APPLICATION_JSON_VALUE,
                              MediaType.APPLICATION_XML_VALUE },
                 produces = { MediaType.APPLICATION_JSON_VALUE,
-                             MediaType.APPLICATION_PROBLEM_XML_VALUE })
+                             MediaType.APPLICATION_XML_VALUE })
     public BrandStatus createBrands(@RequestBody BrandStatus brandStatus) {
         log.info("create brands");
         BrandStatus status = new BrandStatus();
@@ -59,7 +59,7 @@ public class WebServiceController {
                 consumes = { MediaType.APPLICATION_JSON_VALUE,
                              MediaType.APPLICATION_XML_VALUE },
                 produces = { MediaType.APPLICATION_JSON_VALUE,
-                             MediaType.APPLICATION_PROBLEM_XML_VALUE })
+                             MediaType.APPLICATION_XML_VALUE })
     public BrandStatus updateBrands(@RequestBody BrandStatus brandStatus) {
         log.info("update brands");
         BrandStatus status = new BrandStatus();

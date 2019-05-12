@@ -2,10 +2,7 @@ package com.zappos.backoffice.mapper;
 
 import static com.zappos.backoffice.util.DateTimeUtils.parseIsoUtcString;
 
-import java.text.ParseException;
-
 import com.zappos.backoffice.database.model.Inventory;
-import com.zappos.backoffice.error.BackOfficeException;
 import com.zappos.backoffice.tsv.domain.TsvInventory;
 
 public class TsvInventoryToInventoryMapper implements DomainMapper<TsvInventory, Inventory>{
