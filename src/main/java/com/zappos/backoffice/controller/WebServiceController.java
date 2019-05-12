@@ -84,7 +84,7 @@ public class WebServiceController {
     brandService.read(null, null, null)
                 .forEach(b -> {
                     List<TsvInventory> invs = inventoryService.read(Long.valueOf(Integer.toString(b.getId())));
-                    status.getBrands().add(new BrandInventory(b.getName(),
+                    status.getData().add(new BrandInventory(b.getName(),
                                                             b.getId(),
                                                             invs.stream().mapToInt(TsvInventory::getQuantity).sum()));
                 });

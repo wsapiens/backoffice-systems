@@ -1,0 +1,8 @@
+thead, tfoot, tbody { 
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 11px;
+}
+
+.display td {
+    text-align: center;
+}

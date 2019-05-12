@@ -26,7 +26,7 @@ mysql> use zappos;
 Database changed
 ```
 
-## Install Lombok on eclipse
+## Install Lombok on eclipse or Intellij for the person who want to see the code 
 After run maven build, lombok will be downloaded to local maven repo
 Run the lombok jar and updated eclipse
 
@@ -112,7 +112,7 @@ backoffice-systems$ java -jar target/backoffice-systems-0.0.1-SNAPSHOT.war --spr
 
 
 
-* Upload Brands.tsv file via curl
+## (PART1) Upload Brands.tsv file via curl
 
 This application has endpoints to upload Brands.tsv and Brand_Quantity_Time_Received.tsv files
 First, upload Brand TSV file like below via curl command
@@ -294,8 +294,18 @@ drwxr-xr-x  15 spark  staff   480 May 11 21:58 ..
 -rw-r--r--   1 spark  staff    94 May 11 21:59 Brands.tsv
 ```
 
+## (PART2) Web Service Endpoints 
 
-## Web Service Endpoints Test
+### Web Service Endpoints Document
+
+Swagger UI is available after starting this application by below link
+
+```
+http://localhost:8080/swagger-ui.html#/web-service-controller
+```
+
+
+### Web Service Endpoints Test
 
 I see the `BRAND_ID` in .tsv file as good candidate of the primary key for `BRAND` table.
 And Brand Name better be unique, so I put unique constraint on `NAME` column in `BRAND` table.
@@ -439,7 +449,7 @@ Default is json style payload. The total quantity is exact same as above sql que
 ```
 $ curl http://localhost:8080/service/v1/brands/inventories
 {
-   "brands":[
+   "data":[
       {
          "brandName":"Asics",
          "brandId":2,
@@ -469,11 +479,6 @@ $ curl http://localhost:8080/service/v1/brands/inventories
          "brandName":"Timberland",
          "brandId":4,
          "quantity":229
-      },
-      {
-         "brandName":"Vans",
-         "brandId":7,
-         "quantity":348
       }
    ]
 }
@@ -486,40 +491,35 @@ Now this application returns xml payload
 $ curl -H "Accept: application/xml" http://localhost:8080/service/v1/brands/inventories
 <?xml version="1.0" encoding="UTF-8"?>
 <BrandInventoryStatus>
-   <brands>
+   <data>
       <brandName>Asics</brandName>
       <brandId>2</brandId>
       <quantity>246</quantity>
-   </brands>
-   <brands>
+   </data>
+   <data>
       <brandName>Levi's</brandName>
       <brandId>5</brandId>
       <quantity>300</quantity>
-   </brands>
-   <brands>
+   </data>
+   <data>
       <brandName>Lucky</brandName>
       <brandId>3</brandId>
       <quantity>351</quantity>
-   </brands>
-   <brands>
+   </data>
+   <data>
       <brandName>Nike</brandName>
       <brandId>1</brandId>
       <quantity>400</quantity>
-   </brands>
-   <brands>
+   </data>
+   <data>
       <brandName>Rockport</brandName>
       <brandId>6</brandId>
       <quantity>282</quantity>
-   </brands>
-   <brands>
+   </data>
+   <data>
       <brandName>Timberland</brandName>
       <brandId>4</brandId>
       <quantity>229</quantity>
-   </brands>
-   <brands>
-      <brandName>Vans</brandName>
-      <brandId>7</brandId>
-      <quantity>348</quantity>
-   </brands>
+   </data>
 </BrandInventoryStatus>
 ```

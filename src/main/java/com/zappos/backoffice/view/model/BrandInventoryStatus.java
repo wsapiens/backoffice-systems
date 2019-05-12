@@ -17,5 +17,5 @@ public class BrandInventoryStatus implements Serializable {
 
     @Setter(value=AccessLevel.NONE)
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<BrandInventory> brands = new ArrayList<>();
+    private List<BrandInventory> data = new ArrayList<>();
 }

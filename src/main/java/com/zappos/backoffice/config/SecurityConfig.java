@@ -11,18 +11,19 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
-        // Ignore any request that starts with /resources or /management
         web.ignoring()
            .antMatchers("/css/**")
            .antMatchers("/images/**")
            .antMatchers("/upload/**")
-           .antMatchers("/api/**");
+           .antMatchers("/webjars/**")
+           .antMatchers("/service/**");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.authorizeRequests()
+            .antMatchers("/view").permitAll()
             .antMatchers("/upload/**").permitAll()
             .antMatchers("/service/v1/**").permitAll()
             .antMatchers("/v2/api-doc/**").permitAll();
