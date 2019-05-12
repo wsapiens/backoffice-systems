@@ -363,3 +363,118 @@ $ curl -d '{"brands":[{"id":9, "name":"Hommer"}]}' -H "Content-Type: application
 $ curl http://localhost:8080/service/v1/brands?id=9
 {"brands":[]}
 ```
+
+
+* Sum of Inventories Endpoints for All Brands
+
+I understand this for providing endpoint to pull out all the brands with its total inventory quantities
+Also make this endpoints to produce json and xml payload both.
+
+First, I checked from database
+
+```
+mysql> select BRAND_ID, sum(QUANTITY) from inventory group by BRAND_ID;
++----------+---------------+
+| BRAND_ID | sum(QUANTITY) |
++----------+---------------+
+|        1 |           400 |
+|        2 |           246 |
+|        3 |           351 |
+|        4 |           229 |
+|        5 |           300 |
+|        6 |           282 |
+|        7 |           348 |
++----------+---------------+
+7 rows in set (0.00 sec)
+```
+
+
+Default is json style payload. The total quantity is exact same as above sql query
+
+```
+$ curl http://localhost:8080/service/v1/brands/inventories
+{
+   "brands":[
+      {
+         "brandName":"Asics",
+         "brandId":2,
+         "quantity":246
+      },
+      {
+         "brandName":"Levi's",
+         "brandId":5,
+         "quantity":300
+      },
+      {
+         "brandName":"Lucky",
+         "brandId":3,
+         "quantity":351
+      },
+      {
+         "brandName":"Nike",
+         "brandId":1,
+         "quantity":400
+      },
+      {
+         "brandName":"Rockport",
+         "brandId":6,
+         "quantity":282
+      },
+      {
+         "brandName":"Timberland",
+         "brandId":4,
+         "quantity":229
+      },
+      {
+         "brandName":"Vans",
+         "brandId":7,
+         "quantity":348
+      }
+   ]
+}
+```
+
+Send curl command with Accept header for application/xml
+Now this application returns xml payload
+
+```
+$ curl -H "Accept: application/xml" http://localhost:8080/service/v1/brands/inventories
+<?xml version="1.0" encoding="UTF-8"?>
+<BrandInventoryStatus>
+   <brands>
+      <brandName>Asics</brandName>
+      <brandId>2</brandId>
+      <quantity>246</quantity>
+   </brands>
+   <brands>
+      <brandName>Levi's</brandName>
+      <brandId>5</brandId>
+      <quantity>300</quantity>
+   </brands>
+   <brands>
+      <brandName>Lucky</brandName>
+      <brandId>3</brandId>
+      <quantity>351</quantity>
+   </brands>
+   <brands>
+      <brandName>Nike</brandName>
+      <brandId>1</brandId>
+      <quantity>400</quantity>
+   </brands>
+   <brands>
+      <brandName>Rockport</brandName>
+      <brandId>6</brandId>
+      <quantity>282</quantity>
+   </brands>
+   <brands>
+      <brandName>Timberland</brandName>
+      <brandId>4</brandId>
+      <quantity>229</quantity>
+   </brands>
+   <brands>
+      <brandName>Vans</brandName>
+      <brandId>7</brandId>
+      <quantity>348</quantity>
+   </brands>
+</BrandInventoryStatus>
+```

@@ -1,5 +1,7 @@
 package com.zappos.backoffice.controller;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,6 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zappos.backoffice.service.BrandService;
+import com.zappos.backoffice.service.InventoryService;
+import com.zappos.backoffice.tsv.domain.TsvInventory;
+import com.zappos.backoffice.view.model.BrandInventory;
+import com.zappos.backoffice.view.model.BrandInventoryStatus;
 import com.zappos.backoffice.view.model.BrandStatus;
 
 @RestController
@@ -22,6 +28,9 @@ public class WebServiceController {
 
     @Autowired
     private BrandService brandService;
+
+    @Autowired
+    private InventoryService inventoryService;
 
     @GetMapping(path = "/brands",
                 produces = { MediaType.APPLICATION_JSON_VALUE,
@@ -64,5 +73,21 @@ public class WebServiceController {
     public void deleteBrands(@RequestBody BrandStatus brandStatus) {
         log.info("delete brands");
         brandService.delete(brandStatus.getBrands());
+    }
+
+    @GetMapping(path = "/brands/inventories",
+                produces = { MediaType.APPLICATION_JSON_VALUE,
+                             MediaType.APPLICATION_XML_VALUE })
+    public BrandInventoryStatus readBrandsInventories() {
+    log.info("read brands");
+    BrandInventoryStatus status = new BrandInventoryStatus();
+    brandService.read(null, null, null)
+                .forEach(b -> {
+                    List<TsvInventory> invs = inventoryService.read(Long.valueOf(Integer.toString(b.getId())));
+                    status.getBrands().add(new BrandInventory(b.getName(),
+                                                            b.getId(),
+                                                            invs.stream().mapToInt(TsvInventory::getQuantity).sum()));
+                });
+        return status;
     }
 }
