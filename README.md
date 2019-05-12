@@ -121,7 +121,34 @@ First, upload Brand TSV file like below via curl command
 
 `-F 'file=@{the filepath of the .tsv file to uplaod}'`
 
+This application will parse the header line to decide column order without asking user to change the configuration.
+So brand dump .tsv file must have "BRAND_ID"	"Name" both separately by tab. 
 
+```
+"BRAND_ID"	"Name"
+1	"Nike"
+2	"Asics"
+3	"Lucky"
+4	"Timberland"
+5	"Levi's"
+6	"Rockport"
+7	"Vans"
+```
+
+if want to change column order, then the label order in header also should be changed
+
+```
+"Name"	"BRAND_ID"
+"Nike"	1
+"Asics"	2
+"Lucky"	3
+"Timberland"	4
+"Levi's"	5
+"Rockport"	6
+"Vans"	7
+```
+
+Once have success message return from this application, you can check the result from database too.
 
 ```
 $ curl -F 'file=@/Users/spark/Desktop/zappos/Brands.tsv'  http://localhost:8080/upload/brands
@@ -158,6 +185,21 @@ mysql> select * from brand;
 
 
 * Uplaod Brand_Quantity_Time_Received.tsv file via curl
+
+Same as above Brands.tsv, this application decide the order of column by parsing the header line
+and check the labels. So these three labels "TIME_RECEIVED"	"QUANTITY"	"BRAND_ID" must be in header line with being separated by tab.
+
+
+```
+"TIME_RECEIVED"	"QUANTITY"	"BRAND_ID"
+2018-10-01T07:12:00.0000000Z	12	1
+2018-10-01T07:15:00.0000000Z	45	2
+2018-10-02T07:17:00.0000000Z	67	3
+2018-10-02T07:14:00.0000000Z	35	4
+2018-10-03T07:12:00.0000000Z	57	5
+2018-10-03T07:13:00.0000000Z	23	6
+         :
+```
 
 ```
 $ curl -F 'file=@/Users/spark/Desktop/zappos/Brand_Quantity_Time_Received.tsv' http://localhost:8080/upload/inventories
