@@ -302,7 +302,7 @@ And Brand Name better be unique, so I put unique constraint on name column in BR
 So when change entry in BRAND table, change name to different unique name. 
 changing ID will cause other entry has the ID to be changed or new entry will be added with the ID
 
-* Read Brand
+* Read Brands
 
 If no id or name query param, it will read all brands
 If id or name query param is given, it will return the list contains only the brand it found.
@@ -322,5 +322,44 @@ $ curl http://localhost:8080/service/v1/brands?name=Lucky
 {"brands":[{"id":3,"name":"Lucky"}]}
 
 $ curl http://localhost:8080/service/v1/brands?name=Bart
+{"brands":[]}
+```
+
+
+* Create Brands and Read
+
+Create Brands and check by read
+
+```
+$ curl -d '{"brands":[{"name":"Bart"}]}' -H "Content-Type: application/json" -X POST http://localhost:8080/service/v1/brands
+{"brands":[{"id":9,"name":"Bart"}]}
+
+$ curl http://localhost:8080/service/v1/brands?id=9
+{"brands":[{"id":9,"name":"Bart"}]}
+
+$ curl http://localhost:8080/service/v1/brands?name=Bart
+{"brands":[{"id":9,"name":"Bart"}]}
+```
+
+* Update Brands
+
+```
+$ curl -d '{"brands":[{"id":9, "name":"Hommer"}]}' -H "Content-Type: application/json" -X PUT http://localhost:8080/service/v1/brands
+{"brands":[{"id":9,"name":"Hommer"}]}
+
+
+$ curl http://localhost:8080/service/v1/brands?id=9
+{"brands":[{"id":9,"name":"Hommer"}]}
+```
+
+
+* Delete Brands
+
+id must be given to delete
+
+```
+$ curl -d '{"brands":[{"id":9, "name":"Hommer"}]}' -H "Content-Type: application/json" -X DELETE http://localhost:8080/service/v1/brands
+
+$ curl http://localhost:8080/service/v1/brands?id=9
 {"brands":[]}
 ```

@@ -58,6 +58,14 @@ public class BrandServiceTests {
     }
 
     @Test
+    public void testUpdateMultiple() {
+        List<TsvBrand> list = new ArrayList<>();
+        list.add(new TsvBrand(1, "name"));
+        list.add(new TsvBrand(2, "name2"));
+        brandService.update(list);
+    }
+
+    @Test
     public void testDeleteMultiple() {
         List<TsvBrand> list = new ArrayList<>();
         list.add(new TsvBrand(1, "name"));

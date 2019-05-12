@@ -70,7 +70,7 @@ public class BrandService {
     }
 
     /**
-     * Update or Create single database Brand entry by tsvBrand.
+     * Save single database Brand entry by tsvBrand.
      * We assume id is same, but only name is changed, otherwise this will add new one.
      * @param tsvBrand input object
      */
@@ -82,15 +82,39 @@ public class BrandService {
     }
 
     /**
-     * Update or Create multiple Brand entries by list of tsvBrand objects
+     * Save multiple Brand entries by list of tsvBrand objects
      * @param tsvBrands list of tsvBrand objects
+     * @return list of saved tsvBrand objects
      */
-    public void save(List<TsvBrand> tsvBrands) {
+    public List<TsvBrand> save(List<TsvBrand> tsvBrands) {
         List<Brand> brands = tsvBrands.stream()
                                     .map(t -> new TsvBrandToBrandMapper().map(t))
                                     .collect(Collectors.toList());
-        brandRepository.saveAll(brands);
+        List<Brand> results = brandRepository.saveAll(brands);
+        return results.stream()
+                    .map(r -> new BrandToTsvBrandMapper().map(r))
+                    .collect(Collectors.toList());
+    }
 
+    /**
+     * Update multiple Brands on database by given id
+     * if don't find brand by id, that will be filtered out.
+     * This is for not creating a deleted entry by update unknowingly
+     * @param tsvBrands list of TsvBrand domain objects contain the brand id
+     * @return list of saved tsvBrand objects
+     */
+    public List<TsvBrand> update(List<TsvBrand> tsvBrands) {
+        List<Brand> brands = tsvBrands.stream()
+                                    .filter(b -> {
+                                        Optional<Brand> opt = brandRepository.findById(Long.valueOf(Integer.toString(b.getId())));
+                                        return opt.isPresent();
+                                    })
+                                    .map(t -> new TsvBrandToBrandMapper().map(t))
+                                    .collect(Collectors.toList());
+        List<Brand> results = brandRepository.saveAll(brands);
+        return results.stream()
+                    .map(r -> new BrandToTsvBrandMapper().map(r))
+                    .collect(Collectors.toList());
     }
 
     /**
@@ -123,6 +147,7 @@ public class BrandService {
         tsvBrands.forEach(t -> {
             Optional<Brand> opt = brandRepository.findById(Long.valueOf(Integer.toString(t.getId())));
             opt.ifPresent(brand -> {
+                log.info("delete brand id: ".concat(brand.getId().toString()));
                 brands.add(brand);
                 inventories.addAll(inventoryRepository.findByBrandId(brand.getId()));
             });
