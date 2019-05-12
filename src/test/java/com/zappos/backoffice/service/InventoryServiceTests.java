@@ -1,5 +1,6 @@
 package com.zappos.backoffice.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.After;
@@ -34,6 +35,13 @@ public class InventoryServiceTests {
         Assert.assertFalse(inventories.isEmpty());
         inventories = inventoryService.read(null);
         Assert.assertFalse(inventories.isEmpty());
+    }
+
+    @Test
+    public void testSave() {
+        List<TsvInventory> list = new ArrayList<>();
+        list.add(new TsvInventory(1, 23, "2018-10-12T07:05:00.0000000Z"));
+        inventoryService.save(list);
     }
 
 }

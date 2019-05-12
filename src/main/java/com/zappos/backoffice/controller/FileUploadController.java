@@ -1,14 +1,23 @@
 package com.zappos.backoffice.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.zappos.backoffice.error.BackOfficeException;
+import com.zappos.backoffice.service.BrandService;
+import com.zappos.backoffice.service.InventoryService;
 import com.zappos.backoffice.tsv.parser.TsvBrandParser;
 import com.zappos.backoffice.tsv.parser.TsvInventoryParser;
 
@@ -20,7 +29,8 @@ import com.zappos.backoffice.tsv.parser.TsvInventoryParser;
  * @author spark
  *
  */
-@RestController(value = "/upload")
+@Controller
+@RequestMapping(value = "/upload")
 public class FileUploadController {
     static Logger log = Logger.getLogger(FileUploadController.class);
 
@@ -30,17 +40,48 @@ public class FileUploadController {
     @Autowired
     private TsvInventoryParser tsvInventoryParser;
 
+    @Autowired
+    private BrandService brandService;
+
+    @Autowired
+    private InventoryService inventoryService;
+
     /**
      * Upload TSV format Brand dump file
-     * @param path local filepath which this application can access
+     * @param file query param for multipartfile 
+     * @return string type result
      */
-    @PostMapping(path = "/brands")
-    public void uploadBrands(@RequestBody String path) {
-        File file = new File(path);
-        if(!file.exists() || !file.canRead()) {
-            log.warn("can't read brand dump file");
-            throw new BackOfficeException("can't read brand dump file");
+    @PostMapping("/brands")
+    public @ResponseBody String uploadBrands(@RequestParam("file") MultipartFile file) {
+        log.debug("received brand file uploading request");
+        try {
+            brandService.save(tsvBrandParser.parse(saveMultipartFile(file)));
+        } catch (IOException e) {
+            log.error("fail to find current path");
+            return "brand upload failed!!! ";
         }
-        tsvBrandParser.parse(file);
+        return "brands uploaded successfully... ";
+    }
+
+    @PostMapping("/inventories")
+    public @ResponseBody String uploadInventories(@RequestParam("file") MultipartFile file) {
+        log.debug("received brand file uploading request");
+        try {
+            inventoryService.save(tsvInventoryParser.parse(saveMultipartFile(file)));
+        } catch (IOException e) {
+            log.error("fail to find current path");
+            return "inventory upload failed!!! ";
+        }
+        return "inventories uploaded successfully... ";
+    }
+
+    private File saveMultipartFile(MultipartFile multipartFile) throws IOException {
+        String path = new File(".").getCanonicalPath();
+        Path filepath = Paths.get(path, multipartFile.getOriginalFilename());
+
+        try (OutputStream os = Files.newOutputStream(filepath)) {
+            os.write(multipartFile.getBytes());
+        }
+        return new File(filepath.toString());
     }
 }
