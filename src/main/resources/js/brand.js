@@ -141,7 +141,7 @@ $(document).on('click', '#delete_brand', function(){
 		popup("Please Select Brands by checking CheckBoxes");
 	} else {
 		$('<div></div>').appendTo('body')
-		.html('<div><h5>Do you want to delete ' + rows_selected.length + ' property?</h5></div>')
+		.html('<div><h5>Do you want to delete ' + rows_selected.length + ' brands?</h5></div>')
 		.dialog({
 			model: true,
 			title: 'Delete Brands',

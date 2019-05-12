@@ -390,6 +390,7 @@ $ curl http://localhost:8080/service/v1/brands?name=Bart
 * Update Brands
 
 To prevent deleted brand from being re-added, service endpoint will check id exists or not and update the entries only it find
+This application updates brand by id which is `BRAND_ID`
 
 ```
 $ curl -d '{"brands":[{"id":9, "name":"Hommer"}]}' -H "Content-Type: application/json" -X PUT http://localhost:8080/service/v1/brands
@@ -403,7 +404,7 @@ $ curl http://localhost:8080/service/v1/brands?id=9
 
 * Delete Brands
 
-`id` field in the input json is used to delete Brands
+`id` field in the input json is `BRAND_ID` and used to delete Brands
 
 ```
 $ curl -d '{"brands":[{"id":9, "name":"Hommer"}]}' -H "Content-Type: application/json" -X DELETE http://localhost:8080/service/v1/brands
