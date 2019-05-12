@@ -37,42 +37,6 @@ function updateDataTableSelectAllCtrl(table){
    }
 }
 
-$(document).on('click', '#home', function(){
-    window.location = "/";
-});
-$(document).on('click', '#job_view', function(){
-    window.location = "/job_view";
-});
-$(document).on('click', '#subcontract_view', function(){
-    window.location = "/subcontract_view";
-});
-$(document).on('click', '#changeorder_view', function(){
-    window.location = "/changeorder_view";
-});
-$(document).on('click', '#compliance_view', function(){
-    window.location = "/compliance_view";
-});
-$(document).on('click', '#role_view', function(){
-    window.location = "/role_view";
-});
-$(document).on('click', '#org_view', function(){
-    window.location = "/org_view";
-});
-$(document).on('click', '#project_view', function(){
-    window.location = "/project_view";
-});
-$(document).on('click', '#configuration_view', function(){
-    window.location = "/configuration_view";
-});
-$(document).on('click', '#user_view', function(){
-    window.location = "/user_view";
-});
-$(document).on('click', '#log_view', function(){
-    window.location = "/log_view";
-});
-$(document).on('click', '#logout', function(){
-    window.location = "/logout";
-});
 
 $(document).on('click', '#version', function(){
 	$.ajax({
@@ -186,43 +150,3 @@ function refreshTable(table, after_deleted = false) {
 	}
 	rows_selected = [];
 }
-
-function datePickerSetup() {
-    $('#startDatePicker' ).datepicker({
-        onSelect: function (date, instance) {
-        	/**Do nothing on select**/
-        }
-    });
-    $('#startDatePicker' ).datepicker("setDate" , ( twoWeekBefore.getMonth() + 1 ) + "/" + twoWeekBefore.getDate() + "/" + twoWeekBefore.getFullYear());
-    $('#endDatePicker').datepicker({
-        onSelect: function(date, instance) {
-        	/**Do nothing on select**/
-        }
-    });
-    $('#endDatePicker').datepicker("setDate", ( currentDate.getMonth() + 1 ) + "/" + currentDate.getDate() + "/" + currentDate.getFullYear());
-}
-
-$(document).on('click', '.file', function(){
-    var textura_id = $(this).closest("a").attr("id");
-    if(textura_id == null ) {
-        popup("Textura job Id must be provided");
-    } else {
-        $('body').css('cursor', 'wait');
-        $.ajax({
-            url: "file/textura/" + textura_id,
-            type: "GET",
-            data: {},
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function(data) {
-                $('body').css('cursor', 'auto');
-                var win = window.open();
-                win.document.write( '<html><head><title>Textura '+ textura_id +'</title></head><body><h2>Textura Job ' + textura_id + '</h2><pre id="json">' + JSON.stringify(data, null, '\t') + '</pre></body></html>');
-            },
-            error: function(response) {
-                $('body').css('cursor', 'auto');
-                resultPopup(response);
-            }
-        });
-    }
-});

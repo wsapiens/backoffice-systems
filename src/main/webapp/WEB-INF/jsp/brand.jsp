@@ -25,6 +25,9 @@
 		<div style="height: 30px">
 			<div style="font-size: 12px; float: left; width: 75%">
 				<br>
+				<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" id="add_brand"><span class="ui-button-text" style="font-size:11px">Create New</span></button>
+				<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" id="delete_brand"><span class="ui-button-text" style="font-size:11px">Delete Selected</span></button>
+				<br><br><br>
 			</div>
 		</div>
 		<table id="brands" class="display"

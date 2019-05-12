@@ -523,3 +523,29 @@ $ curl -H "Accept: application/xml" http://localhost:8080/service/v1/brands/inve
    </data>
 </BrandInventoryStatus>
 ```
+
+
+## (PART3) Brands Inventory Summary / Report
+
+Showing Total Inventory Quantity for each Brand.
+The report view URL is below
+
+```
+http://localhost:8080/view
+```
+
+
+The UI is built by JSP, JQuery and datatables libraries. It is responsive and provides sorting and searching functionality
+
+* Create A Brand.
+The left upper corner "Create New" button will give popup to fill Brand name.
+The brand name must be unique, otherwise unique constraint I put on database will cause issue
+The UI will send ajax to existing `POST` web service endpoint `/service/v1/brands`, after that it will refresh the table with loading newly added brand
+
+* Delete Brands
+The most left column has checkBox to select row. You can select multiple rows and click "Delete Selected" button on upper left corner.
+It will delete all the selected brands and refresh table. If click checkBox on header, you can select all or clear the selection
+
+
+5/12/2019 Steve
+
