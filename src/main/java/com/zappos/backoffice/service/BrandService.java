@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.zappos.backoffice.database.model.Brand;
+import com.zappos.backoffice.database.model.Inventory;
 import com.zappos.backoffice.database.repository.BrandRepository;
+import com.zappos.backoffice.database.repository.InventoryRepository;
 import com.zappos.backoffice.mapper.BrandToTsvBrandMapper;
 import com.zappos.backoffice.mapper.TsvBrandToBrandMapper;
 import com.zappos.backoffice.tsv.domain.TsvBrand;
@@ -26,6 +28,9 @@ public class BrandService {
 
     @Autowired
     private BrandRepository brandRepository;
+
+    @Autowired
+    private InventoryRepository inventoryRepository;
 
     /**
      * Read database Brand entries and convert to list of TsvBrand domain objects
@@ -87,13 +92,17 @@ public class BrandService {
      * @param name if name is given, delete by name
      */
     public void delete(Long id, String name) {
+        Brand brand = null;
         if(null != id) {
-            brandRepository.deleteById(id);
+            brand = brandRepository.getOne(id);
         } else if (null != name) {
-            Brand brand = brandRepository.findByName(name);
-            if(null != brand) {
-                brandRepository.delete(brand);
-            }
+            brand = brandRepository.findByName(name);
+        }
+        if(null != brand) {
+            List<Inventory> inventories = inventoryRepository.findByBrandId(brand.getId());
+            // delete inventories first
+            inventoryRepository.deleteAll(inventories);
+            brandRepository.delete(brand);
         }
     }
 
@@ -102,9 +111,15 @@ public class BrandService {
      * @param tsvBrands list of TsvBrand objects to delete
      */
     public void delete(List<TsvBrand> tsvBrands) {
-        List<Brand> brands = tsvBrands.stream()
-                                    .map(t -> new TsvBrandToBrandMapper().map(t))
-                                    .collect(Collectors.toList());
+        List<Brand> brands = new ArrayList<>();
+        List<Inventory> inventories = new ArrayList<>();
+        tsvBrands.forEach(t -> {
+            Brand brand = brandRepository.getOne(Long.valueOf(Integer.toString(t.getId())));
+            brands.add(brand);
+            inventories.addAll(inventoryRepository.findByBrandId(brand.getId()));
+        });
+        // delete inventories first
+        inventoryRepository.deleteAll(inventories);
         brandRepository.deleteAll(brands);
     }
 }
