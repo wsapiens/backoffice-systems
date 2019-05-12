@@ -297,10 +297,10 @@ drwxr-xr-x  15 spark  staff   480 May 11 21:58 ..
 
 ## Web Service Endpoints Test
 
-I see the BRAND_ID in .tsv file as good candidate of the primary key for BRAND table.
-And Brand Name better be unique, so I put unique constraint on name column in BRAND table.
+I see the `BRAND_ID` in .tsv file as good candidate of the primary key for `BRAND` table.
+And Brand Name better be unique, so I put unique constraint on `NAME` column in `BRAND` table.
 So when change entry in BRAND table, change name to different unique name. 
-changing ID will cause other entry has the ID to be changed or new entry will be added with the ID
+
 
 * Read Brands
 
@@ -379,6 +379,8 @@ $ curl http://localhost:8080/service/v1/brands?name=Bart
 
 * Update Brands
 
+To prevent deleted brand from being re-added, service endpoint will check id exists or not and update the entries only it find
+
 ```
 $ curl -d '{"brands":[{"id":9, "name":"Hommer"}]}' -H "Content-Type: application/json" -X PUT http://localhost:8080/service/v1/brands
 {"brands":[{"id":9,"name":"Hommer"}]}
@@ -391,7 +393,7 @@ $ curl http://localhost:8080/service/v1/brands?id=9
 
 * Delete Brands
 
-id must be given to delete
+`id` field in the input json is used to delete Brands
 
 ```
 $ curl -d '{"brands":[{"id":9, "name":"Hommer"}]}' -H "Content-Type: application/json" -X DELETE http://localhost:8080/service/v1/brands
@@ -399,6 +401,13 @@ $ curl -d '{"brands":[{"id":9, "name":"Hommer"}]}' -H "Content-Type: application
 $ curl http://localhost:8080/service/v1/brands?id=9
 {"brands":[]}
 ```
+
+If delete and re-add all the brands and inventries from same .tsv files, it will cause foreign key violation!! 
+The `ID` column of `BRAND` table is `BRAND_ID` and set as `AUTO_INCREAMENT`. So re-upload will make brand to have different id value,
+Even though it accepts the given ID value from .tsv file, only if there is nothing on table
+So either updating BRAND_ID on Brand_Quantity_Time_Recieved.tsv file according to database or reset database will prevent the issue.
+or develop custom identifier/sequence generator to not generate value if value is given.
+
 
 
 * Sum of Inventories Endpoints for All Brands
