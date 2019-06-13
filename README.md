@@ -1,7 +1,5 @@
 # inventory-manager 
 
-This is
-
 composed by Steve Park
 
 ## Prepare a database and user on MySQL database
